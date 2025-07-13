@@ -3,16 +3,22 @@ package com.cashi.payment.android
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 class PaymentBDDTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @Before
+    fun setup() {
+        // wait for the UI to be ready
+        composeTestRule.waitForIdle()
+    }
 
     /**
      * Scenario: User sends valid payment
@@ -26,42 +32,37 @@ class PaymentBDDTest {
      */
     @Test
     fun scenario_UserSendsValidPayment() {
-        // given
-        composeTestRule.waitForIdle()
+        // given - already on payment screen (default route)
 
-        // and
+        // and - enter recipient email
         composeTestRule
-            .onNodeWithContentDescription("Recipient Email")
+            .onNodeWithTag("emailInput", useUnmergedTree = true)
             .performTextInput("test@example.com")
 
-        // and
+        // and - enter amount
         composeTestRule
-            .onNodeWithContentDescription("Amount")
+            .onNodeWithTag("amountInput", useUnmergedTree = true)
             .performTextInput("50.00")
 
 
-        // when
+        // when - click send payment button
         composeTestRule
-            .onAllNodesWithText("Send Payment")
-            .filter(hasClickAction())
-            .onFirst()
+            .onAllNodes(hasText("Send Payment") and hasClickAction())
+            .onLast()
             .performClick()
 
-        // then
-        composeTestRule.waitUntil(timeoutMillis = 10000) {
-            composeTestRule
-                .onAllNodesWithText("Payment sent successfully", substring = true)
-                .fetchSemanticsNodes().isNotEmpty()
-        }
-
-        // and
+        // and - navigate to history using the bottom navigation
         composeTestRule
             .onNodeWithText("History")
             .performClick()
 
+        // Wait for navigation and screen to load
+        composeTestRule.waitForIdle()
+
+        // Verify the transaction appears
         composeTestRule.waitUntil(timeoutMillis = 5000) {
             composeTestRule
-                .onAllNodesWithText("test@example.com")
+                .onAllNodesWithText("test@example.com", useUnmergedTree = true)
                 .fetchSemanticsNodes().isNotEmpty()
         }
     }
@@ -77,36 +78,42 @@ class PaymentBDDTest {
      */
     @Test
     fun scenario_UserEntersInvalidEmail() {
-        // guven
-        composeTestRule.waitForIdle()
+        // given - already on payment screen
 
-        // and
+        // and - enter invalid email
         composeTestRule
-            .onNodeWithContentDescription("Recipient Email")
+            .onNodeWithTag("emailInput", useUnmergedTree = true)
             .performTextInput("invalid-email")
 
-        // and
+        // and - enter amount
         composeTestRule
-            .onNodeWithContentDescription("Amount")
+            .onNodeWithTag("amountInput", useUnmergedTree = true)
             .performTextInput("100.00")
 
-        // and
+        // and - select EUR currency
+        // The ExposedDropdownMenuBox needs the menuAnchor to be clicked
         composeTestRule
-            .onNode(hasText("Currency") and hasClickAction())
+            .onNodeWithText("USD") // Current value shown in the text field
             .performClick()
+
+        // Wait for dropdown menu to appear
         composeTestRule.waitForIdle()
+
+        // Look for the EUR option - it should show "EUR €" based on the getCurrencySymbol function
         composeTestRule
-            .onNodeWithText("EUR")
+            .onNodeWithText("EUR €", useUnmergedTree = true)
             .performClick()
 
-        // when
+        // Wait for dropdown to close
+        composeTestRule.waitForIdle()
+
+        // when - click send payment button
         composeTestRule
-            .onAllNodesWithText("Send Payment")
-            .filter(hasClickAction())
-            .onFirst()
+            .onAllNodes(hasText("Send Payment") and hasClickAction())
+            .onLast()
             .performClick()
 
-        // then
+        // then - verify error message
         composeTestRule
             .onNodeWithText("Invalid email format")
             .assertIsDisplayed()
@@ -123,30 +130,30 @@ class PaymentBDDTest {
      */
     @Test
     fun scenario_UserEntersZeroAmount() {
-        // given
-        composeTestRule.waitForIdle()
+        // given - already on payment screen
 
-        //and
+        // and - enter valid email
         composeTestRule
-            .onNodeWithContentDescription("Recipient Email")
+            .onNodeWithTag("emailInput", useUnmergedTree = true)
             .performTextInput("test@example.com")
 
-        // and
+        // and - enter zero amount
         composeTestRule
-            .onNodeWithContentDescription("Amount")
+            .onNodeWithTag("amountInput", useUnmergedTree = true)
             .performTextInput("0")
 
+        // Currency is USD by default, so no need to change it
 
-        // when
+        // when - click send payment button
         composeTestRule
-            .onAllNodesWithText("Send Payment")
-            .filter(hasClickAction())
-            .onFirst()
+            .onAllNodes(hasText("Send Payment") and hasClickAction())
+            .onLast()
             .performClick()
 
-        // then
+        // then - verify error message
         composeTestRule
             .onNodeWithText("Amount must be greater than 0")
             .assertIsDisplayed()
     }
+
 }

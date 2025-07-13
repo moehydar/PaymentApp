@@ -56,7 +56,7 @@ fun PaymentScreen(
 @Composable
 private fun PaymentScreenHeader() {
     Text(
-        text = "Send Payment",
+        text = "Send Payments",
         style = MaterialTheme.typography.headlineMedium
     )
 
