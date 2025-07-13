@@ -1,0 +1,6 @@
+email,amount,currency
+test1@example.com,100,USD
+test2@example.com,250.50,EUR
+test3@example.com,75.25,USD
+test4@example.com,500,EUR
+test5@example.com,333.33,USD
