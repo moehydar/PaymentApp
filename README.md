@@ -1,8 +1,10 @@
 # Cashi Payment App - Technical Challenge
 
-Hey there! 👋 This is a payment app I built as a technical challenge, showcasing what's possible with Kotlin Multiplatform. Think of it as a mini Venmo/PayPal that works across platforms.
+Hey there! 👋 This is a payment app I built as a technical challenge, showcasing what's possible with Kotlin Multiplatform.
 
-[Screen Recording 2025-07-13 at 5.04.39 PM.mov](../../Desktop/Screen%20Recording%202025-07-13%20at%205.04.39%20PM.mov)
+
+https://github.com/user-attachments/assets/b422bd66-ad44-44b3-b783-e9e48732cf77
+
 
 ## What's This All About?
 
@@ -180,7 +182,8 @@ I threw 50 concurrent requests at this thing, and guess what?
 - **4-5 requests/second** - Not breaking any records, but solid for a demo
 
 Check out the fancy graphs in `jmeter/report/index.html` if you're into that sort of thing.
-![Screenshot 2025-07-13 at 1.58.43 PM.png](../../Desktop/Screenshot%202025-07-13%20at%201.58.43%20PM.png)
+<img width="1506" height="830" alt="Screenshot 2025-07-13 at 1 58 43 PM" src="https://github.com/user-attachments/assets/fe0d6860-1404-4326-aceb-63ce9c99b712" />
+
 
 ## What About iOS?
 
@@ -191,4 +194,4 @@ Great question! The beauty of KMP is that all the hard work is done. To add iOS 
 
 The business logic? Already there, waiting to be used!
 
-Built by [Mohammad Haidar]
+Built by Mohammad Haidar
