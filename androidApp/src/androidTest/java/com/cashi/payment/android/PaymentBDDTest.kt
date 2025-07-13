@@ -91,9 +91,8 @@ class PaymentBDDTest {
             .performTextInput("100.00")
 
         // and - select EUR currency
-        // The ExposedDropdownMenuBox needs the menuAnchor to be clicked
         composeTestRule
-            .onNodeWithText("USD") // Current value shown in the text field
+            .onNodeWithText("USD")
             .performClick()
 
         // Wait for dropdown menu to appear
@@ -142,7 +141,6 @@ class PaymentBDDTest {
             .onNodeWithTag("amountInput", useUnmergedTree = true)
             .performTextInput("0")
 
-        // Currency is USD by default, so no need to change it
 
         // when - click send payment button
         composeTestRule
